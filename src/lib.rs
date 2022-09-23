@@ -11,7 +11,7 @@ impl Parse for ForeignItemFns {
         let lookahead = input.lookahead1();
         let mut fns = Vec::new();
         // Check for a new function definition
-        if lookahead.peek(token::Fn) || lookahead.peek(token::Pub) {
+        while lookahead.peek(token::Fn) || lookahead.peek(token::Pub) {
             fns.push(ForeignItemFn::parse(input)?);
         }
         return Ok(Self{ fns });
