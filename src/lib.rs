@@ -19,7 +19,7 @@ impl Parse for ForeignItemFns {
                 fns.push(func.clone());
             }
         }
-        panic!("Past the for loop with length {}", fns.len());
+        // panic!("Past the for loop with length {}", fns.len());
         return Ok(ForeignItemFns { fns: Vec::new() });
 
     }
@@ -67,7 +67,7 @@ pub fn guest_dynamic(item: TokenStream) -> TokenStream {
             ..
         } = &func.sig;
         let mut out_stream = quote!();
-        while let syn::ReturnType::Type(_ar, rt) = output {
+        if let syn::ReturnType::Type(_ar, rt) = output {
             let arg_names: Vec<syn::Ident> = inputs.iter().filter_map(|f|{ 
                 if let syn::FnArg::Typed(arg) = f {
                     if let syn::Pat::Ident(ident) = &*arg.pat {
