@@ -9,15 +9,15 @@ struct ForeignItemFns {
 impl Parse for ForeignItemFns {
     fn parse(content: syn::parse::ParseStream) -> syn::Result<Self> {
         let mut items: Vec<ForeignItem> = Vec::new();
-        while !content.is_empty() {
-            items.push(content.parse()?);
-        }
-        let fns: Vec<ForeignItemFn> = items.iter().filter_map(|f| {
-            if let ForeignItem::Fn(func) = f {
-                Some(func.clone())
-            } else {None}
-        }).collect();
-        return Ok(ForeignItemFns { fns });
+        // while !content.is_empty() {
+        //     items.push(content.parse()?);
+        // }
+        // let fns: Vec<ForeignItemFn> = items.iter().filter_map(|f| {
+        //     if let ForeignItem::Fn(func) = f {
+        //         Some(func.clone())
+        //     } else {None}
+        // }).collect();
+        return Ok(ForeignItemFns { fns: Vec::new() });
 
     }
 }
