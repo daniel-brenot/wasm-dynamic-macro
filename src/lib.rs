@@ -1,5 +1,5 @@
 use proc_macro::TokenStream;
-use syn::{parse_macro_input, ItemFn, Signature, ForeignItemFn, parse::Parse, token};
+use syn::{parse_macro_input, ItemFn, Signature, ForeignItemFn, parse::Parse, token, Token, Visibility, ForeignItem};
 use quote::quote;
 
 struct ForeignItemFns {
@@ -7,14 +7,18 @@ struct ForeignItemFns {
 }
 
 impl Parse for ForeignItemFns {
-    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let lookahead = input.lookahead1();
-        let mut fns = Vec::new();
-        // Check for a new function definition
-        while lookahead.peek(token::Fn) || lookahead.peek(token::Pub) {
-            fns.push(ForeignItemFn::parse(input)?);
+    fn parse(content: syn::parse::ParseStream) -> syn::Result<Self> {
+        let mut items: Vec<ForeignItem> = Vec::new();
+        while !content.is_empty() {
+            items.push(content.parse()?);
         }
-        return Ok(Self{ fns });
+        let fns: Vec<ForeignItemFn> = items.iter().filter_map(|f| {
+            if let ForeignItem::Fn(func) = f {
+                Some(func.clone())
+            } else {None}
+        }).collect();
+        return Ok(ForeignItemFns { fns });
+
     }
 }
 
