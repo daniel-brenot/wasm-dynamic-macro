@@ -66,16 +66,6 @@ pub fn guest_dynamic(item: TokenStream) -> TokenStream {
             output,
             ..
         } = &func.sig;
-        let mut out_stream = quote!();
-        // list of function definitions
-    let definitions = parse_macro_input!(item as ForeignItemFns).fns;
-    let new_definitions = definitions.iter().map(|func| {
-        let Signature {
-            ident,
-            inputs,
-            output,
-            ..
-        } = &func.sig;
         if let syn::ReturnType::Type(_ar, rt) = output {
             let arg_names: Vec<syn::Ident> = inputs.iter().filter_map(|f|{ 
                 if let syn::FnArg::Typed(arg) = f {
