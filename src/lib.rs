@@ -12,11 +12,12 @@ impl Parse for ForeignItemFns {
         while !content.is_empty() {
             items.push(content.parse()?);
         }
-        // let fns: Vec<ForeignItemFn> = items.iter().filter_map(|f| {
-        //     if let ForeignItem::Fn(func) = f {
-        //         Some(func.clone())
-        //     } else {None}
-        // }).collect();
+        let mut fns: Vec<ForeignItemFn> = Vec::new();
+        for item in items.iter() {
+            if let ForeignItem::Fn(func) = item {
+                fns.push(func.clone());
+            }
+        }
         return Ok(ForeignItemFns { fns: Vec::new() });
 
     }
