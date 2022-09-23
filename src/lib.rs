@@ -85,7 +85,7 @@ pub fn guest_dynamic(item: TokenStream) -> TokenStream {
                     Some(unsafe { memcpy(rval as u32) })
                 }
             }
-        } else { quote!() }
+        } else { panic!("No return type") }
     });
     return TokenStream::from(quote! {
         unsafe fn memcpy<T>(size: u32) -> T where T: bytevec::ByteDecodable {
