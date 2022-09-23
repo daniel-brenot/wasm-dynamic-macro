@@ -12,7 +12,7 @@ impl Parse for ForeignItemFns {
         while !content.is_empty() {
             items.push(content.parse()?);
         }
-        panic!("Past the while loop");
+        panic!("Past the while loop with length {}", items.len());
         let mut fns: Vec<ForeignItemFn> = Vec::new();
         for item in items.iter() {
             if let ForeignItem::Fn(func) = item {
