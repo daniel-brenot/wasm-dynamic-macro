@@ -20,7 +20,7 @@ impl Parse for ForeignItemFns {
             }
         }
         // panic!("Past the for loop with length {}", fns.len());
-        return Ok(ForeignItemFns { fns: Vec::new() });
+        return Ok(ForeignItemFns { fns });
 
     }
 }
