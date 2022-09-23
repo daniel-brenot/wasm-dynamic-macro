@@ -59,7 +59,8 @@ pub fn guest_dynamic(item: TokenStream) -> TokenStream {
             output,
             ..
         } = &func.sig;
-        if let syn::ReturnType::Type(_ar, rt) = output {
+        let mut out_stream = quote!();
+        while let syn::ReturnType::Type(_ar, rt) = output {
             let arg_names: Vec<syn::Ident> = inputs.iter().filter_map(|f|{ 
                 if let syn::FnArg::Typed(arg) = f {
                     if let syn::Pat::Ident(ident) = &*arg.pat {
@@ -68,8 +69,7 @@ pub fn guest_dynamic(item: TokenStream) -> TokenStream {
                 }
                 None
             }).collect();
-            // let vis = &func.vis;
-            quote! {
+            out_stream.extend(quote! {
                 pub fn #ident(#inputs) -> Option<#rt> {
                     // Internal unsafe function that will be wrapped
                     extern "C" { fn #ident(#inputs) -> isize; }
@@ -77,8 +77,9 @@ pub fn guest_dynamic(item: TokenStream) -> TokenStream {
                     if rval < 0 { return None; }
                     Some(unsafe { memcpy(rval as u32) })
                 }
-            }
-        } else { quote!() }
+            });
+        }
+        return out_stream;
     });
     return TokenStream::from(quote! {
         unsafe fn memcpy<T>(size: u32) -> T where T: bytevec::ByteDecodable {
